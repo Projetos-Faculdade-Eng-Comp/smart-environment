@@ -3,6 +3,36 @@ import sys
 import os
 
 
+
+def get_public_ip():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect(("8.8.8.8", 80))
+    public_ip = sock.getsockname()[0]
+    sock.close()
+
+    return public_ip
+
+SERVER_IP = get_public_ip()
+SERVER_PORT = 12345
+
+
+def connect_to_client():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        server_socket.bind((SERVER_IP, SERVER_PORT))
+    except socket.error:
+        print("Não foi possível estabelecer conexão com o socket. Encerrando home assistant.")
+        sys.exit()
+
+    server_socket.listen(1)
+    print(f"Home assistant iniciado no endereço {SERVER_IP}:{SERVER_PORT}")
+    try:
+        client_socket, client_address = server_socket.accept()
+    except OSError:
+        break
+   
+
+
 def lamp_callback(ch, method, properties, body):
     print(f"Nível de luminosidade: {body}")
 
@@ -36,7 +66,10 @@ def main():
     channel.basic_consume(queue='air_conditioner_queue',
                           on_message_callback=air_conditioner_callback, auto_ack=True)
 
-    channel.start_consuming()
+    #channel.start_consuming()
+    connect_to_client()  ##to na duvida sobre variaveis locais e globais; o socket ta local a essa funcao?
+    
+
 
 
 if __name__ == '__main__':
