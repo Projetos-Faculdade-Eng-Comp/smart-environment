@@ -87,6 +87,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
     client_socket.connect((server_ip, server_port))
+    print("conexao com sucesso")
 except socket.error:
     print("Não foi possível se conectar ao servidor")
     sys.exit()
