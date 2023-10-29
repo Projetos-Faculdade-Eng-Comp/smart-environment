@@ -30,7 +30,11 @@ class Home_assistant:
     def __init__(self, host, port,socket):
         self.host = host
         self.port = port
-        self.connected_devices = []
+        self.devices = {
+            1: "Lâmpada",
+            2: "Ar condicionado",
+            3: "Bomba D'água"
+        }
         self.server_socket=socket
         try:
             server_socket.bind((host, port))
@@ -43,7 +47,6 @@ class Home_assistant:
     def start(self):
         #self.handle_devices()
         self.connect_to_client()
-        #self.start_communication()
 
     def handle_devices(self):
         pika.BaseConnection()
@@ -77,64 +80,38 @@ class Home_assistant:
         print(f"Home assistant iniciado no endereço {SERVER_IP}:{SERVER_PORT}")
         client_socket, client_address = server_socket.accept()
         print("conexao com sucesso")
+        self.start_communication(client_socket)
 
-    def start_communication(self):
+    def start_communication(self, client_socket):
         while True:
-            print("Escolha o dispositivo:")
-            for idx, device in enumerate(self.connected_devices):
-                print(f"{idx + 1}. {device.device_type}")
+            device_options = "\n".join([f"{device_num} - {device_name}" for device_num, device_name in self.devices.items()])
+            menu = f"menu:Escolha um dispositivo:\n{device_options}\n0 - Sair\n"
+            client_socket.send(menu.encode())
+            choice = client_socket.recv(1024).decode()
 
-            print(f"{len(self.connected_devices) + 1}. /VOLTAR")
-            choice = input("Digite o número do dispositivo ou /VOLTAR para sair: ")
-
-            if choice == "/VOLTAR":
+            if choice == '0':
+                client_socket.send("leave:Saindo...".encode())
+                client_socket.close()
                 break
 
             try:
-                choice = int(choice)
-                if 1 <= choice <= len(self.connected_devices):
-                    device = self.connected_devices[choice - 1]
-
-                    if device.protocol == "UDP":
-                        print("Pressione 'Q' a qualquer momento para voltar ao menu principal.")
-                        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
-                            udp_socket.bind((device.device_ip, device.device_port))
-                            print(f"Recebendo mensagens do dispositivo {device.device_type} em {device.device_ip}:{device.device_port}...")
-                            last_addr = None
-                            first_message_printed = False
-                            while True:
-                                #data, addr = udp_socket.recvfrom(1024)
-                                #print(f"Recebido de {addr}: {data.decode()}")
-                                data, addr = udp_socket.recvfrom(1024)
-                                message = f"Recebido de {addr}: {data.decode()}"
-                                # Mova o cursor para a primeira posição da linha anterior
-                                #if last_addr:
-                                    #move_cursor(0, last_addr[1] + 1)
-                                if not first_message_printed:
-                                    print(message)
-                                    first_message_printed = True
-                                else:
-                                # Limpe as duas linhas anteriores
-                                    print("\033[F\033[K\033[F\033[K", end="")
-                                    print(message)
-                                last_addr = addr
-                                # Verifique continuamente se o usuário pressionou 'Q' para sair
-                                #if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-                                 #   user_input = input()
-                                  #  if user_input == 'Q':
-                                   #     break
-                    else:
-                        while True:
-                            user_command = input(f"Digite /Menu ({device.device_type}) ou /VOLTAR: ")
-                            if user_command == "/VOLTAR":
-                                break
-                            # Enviar o comando para o dispositivo e receber a resposta, se necessário
-                            response = device.send_command(user_command)
-                            print(response)
+                device_num = int(choice)
+                if device_num in self.devices:
+                    client_socket.send(f"ok:Você escolheu {self.devices[device_num]}\n".encode())
+                    # Lógica para lidar com o dispositivo escolhido
+                    if device_num == 1:
+                        # Lógica para Lâmpada
+                        pass
+                    elif device_num == 2:
+                        # Lógica para Ar condicionado
+                        pass
+                    elif device_num == 3:
+                        # Lógica para Bomba D'água
+                        pass
                 else:
-                    print("Escolha inválida. Tente novamente.")
+                    client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
             except ValueError:
-                print("Entrada inválida. Digite o número do dispositivo ou /VOLTAR.")
+                client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
 
 
 

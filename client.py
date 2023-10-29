@@ -2,6 +2,7 @@ import socket
 import sys
 import threading
 import ipaddress
+import os
 
 thread_message = True
 
@@ -17,9 +18,6 @@ def send_message(server):
         except socket.error:
             sys.exit()
 
-        if message == "/SAIR":
-            sys.exit()
-
 
 def receive_message(server):#entao a primeira msg q eu recebo seria o menu?dps vou pra thread de enviar
     while True:
@@ -31,21 +29,14 @@ def receive_message(server):#entao a primeira msg q eu recebo seria o menu?dps v
 
         print(message)
 
-        if splitted_message[0] == "error":
-            sys.exit()
-
-        elif prefix == "leave":
-            sys.exit()
+        if prefix == "leave":
+            os._exit(0) 
         
         elif prefix == "menu":
             send_message_thread = threading.Thread(
                 target=send_message, args=(client_socket,))
             send_message_thread.start()
 
-        elif prefix == 'closedServer':
-            global thread_message
-            thread_message = False
-            sys.exit() 
 
 
 def is_valid_ip(ip):
