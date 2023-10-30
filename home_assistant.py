@@ -72,7 +72,7 @@ class Home_assistant:
                           on_message_callback=lamp_callback, auto_ack=True)
         channel.basic_consume(queue='air_conditioner_queue',
                           on_message_callback=air_conditioner_callback, auto_ack=True)
-        #criar um vetor de devices so com os nomes deles
+        
     def connect_to_client(self):
         SERVER_IP=get_public_ip()
         SERVER_PORT=self.port
