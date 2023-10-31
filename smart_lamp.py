@@ -22,9 +22,10 @@ def main():
 
     channel.exchange_declare(exchange='smart_lamp', exchange_type='fanout')
 
-    light_level = '1'
 
     while (1):
+        
+        light_level = read_light_data()
         print(f"Nível de luminosidade: {light_level}")
         channel.basic_publish(exchange='smart_lamp',
                               routing_key='', body=light_level)
