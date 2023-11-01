@@ -3,6 +3,7 @@ import sys
 import os
 import socket
 
+global channel
 
 def get_public_ip():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -13,16 +14,6 @@ def get_public_ip():
     return public_ip
 
 
-def lamp_callback(ch, method, properties, body):
-    ##eh aq q a gnt tem q enviar o ngc pro client
-    print(f"Nível de luminosidade: {body}")
-
-
-def air_conditioner_callback(ch, method, properties, body):
-    pass
-
-
-
 class Device:
     def __init__(self, device_name,device_queue ):
         self.device_name = device_name
@@ -31,6 +22,7 @@ class Home_assistant:
     def __init__(self, host, port,socket):
         self.host = host
         self.port = port
+        self.client_socket = None
         self.devices = {
             1: "Lâmpada",
             2: "Ar condicionado",
@@ -44,10 +36,20 @@ class Home_assistant:
             sys.exit()
 
 
-
     def start(self):
-        self.handle_devices()
-        #self.connect_to_client()
+        self.connect_to_client()
+
+
+
+    def lamp_callback(self, ch, method, properties, body):
+        ##eh aq q a gnt tem q enviar o ngc pro client
+        print(f"Nível de luminosidade: {body}")
+        self.client_socket.send(f"ok:{body}".encode())
+
+
+
+    def air_conditioner_callback(ch, method, properties, body):
+        pass
 
     def handle_devices(self):
         #pika.BaseConnection()  comentei e tudo funcionou kakaka
@@ -55,6 +57,7 @@ class Home_assistant:
         connection = pika.BlockingConnection(
         pika.ConnectionParameters(host='localhost'))
         print("conexao ok")
+        global channel
         channel = connection.channel()
 
         channel.exchange_declare(exchange='smart_lamp', exchange_type='fanout')
@@ -69,38 +72,41 @@ class Home_assistant:
         print(' [*] Waiting for logs. To exit press CTRL+C')
 
         channel.basic_consume(queue='lamp_queue',
-                          on_message_callback=lamp_callback, auto_ack=True)
+                          on_message_callback= self.lamp_callback, auto_ack=True)
         #channel.basic_consume(queue='air_conditioner_queue',on_message_callback=air_conditioner_callback, auto_ack=True)
-        channel.start_consuming()
+        #channel.start_consuming()
 
     def connect_to_client(self):
         SERVER_IP=get_public_ip()
         SERVER_PORT=self.port
         server_socket.listen(1)
         print(f"Home assistant iniciado no endereço {SERVER_IP}:{SERVER_PORT}")
-        client_socket, client_address = server_socket.accept()
+        self.client_socket, client_address = server_socket.accept()
         print("conexao com sucesso")
-        self.start_communication(client_socket)
+        self.start_communication()
 
-    def start_communication(self, client_socket):
+    def start_communication(self):
+        self.handle_devices()
+        global channel
         while True:
             device_options = "\n".join([f"{device_num} - {device_name}" for device_num, device_name in self.devices.items()])
             menu = f"menu:Escolha um dispositivo:\n{device_options}\n0 - Sair\n"
-            client_socket.send(menu.encode())
-            choice = client_socket.recv(1024).decode()
+            self.client_socket.send(menu.encode())
+            choice = self.client_socket.recv(1024).decode()
 
             if choice == '0':
-                client_socket.send("leave:Saindo...".encode())
-                client_socket.close()
+                self.client_socket.send("leave:Saindo...".encode())
+                self.client_socket.close()
                 break
 
             try:
                 device_num = int(choice)
                 if device_num in self.devices:
-                    client_socket.send(f"ok:Você escolheu {self.devices[device_num]}\n".encode())
+                    self.client_socket.send(f"ok:Você escolheu {self.devices[device_num]}\n".encode())
                     # Lógica para lidar com o dispositivo escolhido
                     if device_num == 1:
                         #o lance eh q o channel tem q ser variavel "global" tb, tem q dar um jeito nisso
+                        channel.start_consuming()
                         # Lógica para Lâmpada
                         pass
                     elif device_num == 2:
@@ -110,9 +116,9 @@ class Home_assistant:
                         # Lógica para Bomba D'água
                         pass
                 else:
-                    client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
+                    self.client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
             except ValueError:
-                client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
+                self.client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
 
 
 
