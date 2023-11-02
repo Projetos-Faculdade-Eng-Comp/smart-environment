@@ -7,7 +7,7 @@ import numpy as np
 def read_light_data():
 
     mean_light = 500  # Média de luminosidade
-    std_deviation = 2.0      # Desvio padrão da temperatura
+    std_deviation = 2.0      # Desvio padrão da luminosidade
 
     light_value = round(np.random.normal(mean_light, std_deviation), 1)
     light_message = f"{light_value}lx"
