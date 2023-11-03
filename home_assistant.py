@@ -62,19 +62,23 @@ class Home_assistant:
 
 
     def lamp_callback(self, ch, method, properties, body):
-        self.messagesLamp.append(body)
-
+        if len(self.messagesLamp)<10:
+            self.messagesLamp.append(body)
+        else:
+            self.messagesLamp.clear()
 
 
     def air_conditioner_callback(self,ch, method, properties, body):
-        self.messagesAir.append(body)
-
+        if len(self.messagesAir)<10:
+            self.messagesAir.append(body)
+        else:
+            self.messagesAir.clear()
 
     def send_messages_devices(self):
         while True:
             if LAMP:
                 if self.messagesLamp:
-                    message = self.messagesLamp.pop(0)
+                    message = self.messagesLamp.pop()
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -83,7 +87,7 @@ class Home_assistant:
 
             if AIR:
                 if self.messagesAir:
-                    message = self.messagesAir.pop(0)
+                    message = self.messagesAir.pop()
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
