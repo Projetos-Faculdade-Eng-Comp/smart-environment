@@ -20,15 +20,15 @@ def main():
         pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='smart_lamp', exchange_type='fanout')
+    channel.exchange_declare(exchange='devices', exchange_type='direct')
 
 
     while (1):
         
         light_level = read_light_data()
         print(f"Nível de luminosidade: {light_level}")
-        channel.basic_publish(exchange='smart_lamp',
-                              routing_key='', body=light_level)
+        channel.basic_publish(exchange='devices',
+                              routing_key='lamp', body=light_level)
         time.sleep(5)
 
     connection.close()

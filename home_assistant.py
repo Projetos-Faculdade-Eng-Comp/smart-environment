@@ -101,7 +101,7 @@ class Home_assistant:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel_lamp = connection.channel()
         channel_lamp.queue_declare(queue='lamp_queue', exclusive=True)
-        channel_lamp.queue_bind(exchange='smart_lamp', queue='lamp_queue')
+        channel_lamp.queue_bind(exchange='devices', queue='lamp_queue',routing_key='lamp')
         channel_lamp.basic_consume(queue='lamp_queue', on_message_callback=self.lamp_callback, auto_ack=True)
         channel_lamp.start_consuming()
 
@@ -109,7 +109,7 @@ class Home_assistant:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel_air_cond = connection.channel()
         channel_air_cond.queue_declare(queue='air_conditioner_queue', exclusive=True)
-        channel_air_cond.queue_bind(exchange='air_conditioner', queue='air_conditioner_queue')
+        channel_air_cond.queue_bind(exchange='devices', queue='air_conditioner_queue',routing_key='air_cond')
         channel_air_cond.basic_consume(queue='air_conditioner_queue', on_message_callback=self.air_conditioner_callback, auto_ack=True)
         channel_air_cond.start_consuming()
 

@@ -20,15 +20,14 @@ def main():
         pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='air_conditioner', exchange_type='fanout')
-
+    
 
     while (1):
         
         temp_level = read_temperature_data()
         print(f"Temperatura: {temp_level}")
-        channel.basic_publish(exchange='air_conditioner',
-                              routing_key='', body=temp_level)
+        channel.basic_publish(exchange='devices',
+                              routing_key='air_cond', body=temp_level)
         time.sleep(5)
 
     connection.close()
