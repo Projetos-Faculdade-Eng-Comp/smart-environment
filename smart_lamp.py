@@ -2,6 +2,17 @@ import pika
 import time
 import sys
 import os
+import numpy as np
+
+def read_light_data():
+
+    mean_light = 500  # Média de luminosidade
+    std_deviation = 2.0      # Desvio padrão da luminosidade
+
+    light_value = round(np.random.normal(mean_light, std_deviation), 1)
+    light_message = f"{light_value}lx"
+    return light_message
+
 
 
 def main():
@@ -11,9 +22,10 @@ def main():
 
     channel.exchange_declare(exchange='smart_lamp', exchange_type='fanout')
 
-    light_level = '1'
 
     while (1):
+        
+        light_level = read_light_data()
         print(f"Nível de luminosidade: {light_level}")
         channel.basic_publish(exchange='smart_lamp',
                               routing_key='', body=light_level)
