@@ -20,8 +20,6 @@ def main():
         pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='devices', exchange_type='direct')
-
 
     while (1):
         

@@ -100,6 +100,7 @@ class Home_assistant:
     def handle_lamp(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel_lamp = connection.channel()
+        channel_lamp.exchange_declare(exchange='devices', exchange_type='direct')
         channel_lamp.queue_declare(queue='lamp_queue', exclusive=True)
         channel_lamp.queue_bind(exchange='devices', queue='lamp_queue',routing_key='lamp')
         channel_lamp.basic_consume(queue='lamp_queue', on_message_callback=self.lamp_callback, auto_ack=True)
