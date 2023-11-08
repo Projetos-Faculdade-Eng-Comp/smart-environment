@@ -27,7 +27,7 @@ Então, realize um `git clone` deste repositório e crie um ambiente virtual Pyt
 
 ```bash
 $ python3 -m venv venv # Criar o ambiente virtual chamado venv
-$ souce venv/bin/activate # Ativar o ambiente virtual
+$ source venv/bin/activate # Ativar o ambiente virtual
 ```
 
 Agora, com o ambiente virtual ativo, instale as dependências dos frameworks:
@@ -39,6 +39,7 @@ $ python3 -m pip install grpcio-tools # Pacote com ferramentas como protobuf
 ```
 
 Ou apenas:
+
 ```bash
 $ pip install -r requirements.txt
 ```
