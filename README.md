@@ -38,6 +38,11 @@ $ python3 -m pip install grpcio # Biblioteca para usar o gRPC
 $ python3 -m pip install grpcio-tools # Pacote com ferramentas como protobuf
 ```
 
+Ou apenas:
+```bash
+$ pip install -r requirements.txt
+```
+
 Por fim, com o Docker executando, utilizar o seguinte comando para iniciar o servidor padrão do RabbitMQ:
 
 ```bash
