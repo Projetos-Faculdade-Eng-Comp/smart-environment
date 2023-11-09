@@ -6,11 +6,12 @@ import os
 
 thread_message = True
 
+
 def send_message(server):
     while thread_message:
         message = input()
 
-        if not message.strip(): 
+        if not message.strip():
             continue
 
         try:
@@ -19,7 +20,8 @@ def send_message(server):
             sys.exit()
 
 
-def receive_message(server):#entao a primeira msg q eu recebo seria o menu?dps vou pra thread de enviar
+# entao a primeira msg q eu recebo seria o menu?dps vou pra thread de enviar
+def receive_message(server):
     while True:
         message = server.recv(1024).decode()
         splitted_message = message.split(":")
@@ -30,13 +32,12 @@ def receive_message(server):#entao a primeira msg q eu recebo seria o menu?dps v
         print(message)
 
         if prefix == "leave":
-            os._exit(0) 
-        
+            os._exit(0)
+
         elif prefix == "menu":
             send_message_thread = threading.Thread(
                 target=send_message, args=(client_socket,))
             send_message_thread.start()
-
 
 
 def is_valid_ip(ip):
@@ -57,7 +58,6 @@ def is_valid_port(port):
         return False
 
 
- 
 while True:
     server_ip = input("Digite o IP do servidor: ")
     if is_valid_ip(server_ip):
@@ -73,7 +73,6 @@ while True:
         print("Porta inválida. Certifique-se de que é um número inteiro no intervalo válido (1-65535).")
 
 
-
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
@@ -86,22 +85,3 @@ except socket.error:
 receive_message_thread = threading.Thread(
     target=receive_message, args=(client_socket,))
 receive_message_thread.start()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
