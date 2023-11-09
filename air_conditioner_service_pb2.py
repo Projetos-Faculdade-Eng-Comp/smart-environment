@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1d\x61ir_conditioner_service.proto\x12\x17\x61ir_conditioner_service\"\x17\n\x15\x41irConditionerRequest\"\x19\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t2\xea\x01\n\x15\x41irConditionerService\x12\x66\n\x13ligarArCondicionado\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Status\x12i\n\x16\x64\x65sligarArCondicionado\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Statusb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1d\x61ir_conditioner_service.proto\x12\x17\x61ir_conditioner_service\"\x17\n\x15\x41irConditionerRequest\"\x19\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t2\xac\x03\n\x15\x41irConditionerService\x12\x66\n\x13ligarArCondicionado\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Status\x12i\n\x16\x64\x65sligarArCondicionado\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Status\x12_\n\x0c\x61umentarTemp\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Status\x12_\n\x0c\x64iminuirTemp\x12..air_conditioner_service.AirConditionerRequest\x1a\x1f.air_conditioner_service.Statusb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,5 +25,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_STATUS']._serialized_start=83
   _globals['_STATUS']._serialized_end=108
   _globals['_AIRCONDITIONERSERVICE']._serialized_start=111
-  _globals['_AIRCONDITIONERSERVICE']._serialized_end=345
+  _globals['_AIRCONDITIONERSERVICE']._serialized_end=539
 # @@protoc_insertion_point(module_scope)

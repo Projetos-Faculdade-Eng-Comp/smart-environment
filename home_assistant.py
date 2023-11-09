@@ -175,7 +175,7 @@ class HomeAssistant:
 
                     elif device_num == 2:
                         while True:
-                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - VerSensor"
+                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3-Aumentar\n4-Diminuir\n5 - VerSensor"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
@@ -184,8 +184,16 @@ class HomeAssistant:
                             elif choice == 2:
                                 response = self.air_stub.desligarArCondicionado(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
+                            elif choice == 3:
+                                response = self.air_stub.aumentarTemp(air_conditioner_service_pb2.AirConditionerRequest())
+                                self.client_socket.send(f"ok:{response.message}".encode())
 
-                            elif choice == 3: 
+                            elif choice == 4:
+                                response = self.air_stub.diminuirTemp(air_conditioner_service_pb2.AirConditionerRequest())
+                                self.client_socket.send(f"ok:{response.message}".encode())
+
+
+                            elif choice == 5: 
                                 # Lógica para Ar condicionado
                                 global AIR
                                 AIR = True

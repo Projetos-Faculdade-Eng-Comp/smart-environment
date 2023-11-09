@@ -5,6 +5,9 @@ package air_conditioner_service;
 service AirConditionerService {
   rpc ligarArCondicionado (AirConditionerRequest) returns (Status);
   rpc desligarArCondicionado (AirConditionerRequest) returns (Status);
+  rpc aumentarTemp (AirConditionerRequest) returns (Status);
+  rpc diminuirTemp (AirConditionerRequest) returns (Status);
+  
 }
 
 message AirConditionerRequest {
