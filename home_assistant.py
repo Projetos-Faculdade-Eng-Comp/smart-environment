@@ -22,10 +22,6 @@ def get_public_ip():
     sock.close()
     return public_ip
 
-class Device:
-    def __init__(self, device_name, device_queue):
-        self.device_name = device_name
-
 class HomeAssistant:
     def __init__(self, host, port, socket):
         self.host = host
@@ -38,15 +34,18 @@ class HomeAssistant:
         }
         self.server_socket = socket
 
+    def setup_server_socket(self):
+        try:
+            self.server_socket.bind((self.host, self.port))
+        except socket.error:
+            print("Não foi possível estabelecer conexão com o socket. Encerrando home assistant.")
+            sys.exit()
+
+
         # Lista para armazenar mensagens
         self.messagesLamp = []
         self.messagesAir = []
 
-        try:
-            server_socket.bind((host, port))
-        except socket.error:
-            print("Não foi possível estabelecer conexão com o socket. Encerrando home assistant.")
-            sys.exit()
 
     # Para a lâmpada
     lamp_channel = grpc.insecure_channel('localhost:50051')  # Use o endereço correto do servidor gRPC da lâmpada
@@ -137,7 +136,11 @@ class HomeAssistant:
             if choice == '0':
                 self.client_socket.send("leave:Saindo...".encode())
                 self.client_socket.close()
-                break
+                self.client_socket = None
+                print("Cliente desconectado. Esperando novas conexões...")
+                while not self.client_socket:
+                    self.client_socket, client_address = self.server_socket.accept()
+                    print("Nova conexão bem-sucedida")
 
             try:
                 device_num = int(choice)
@@ -220,6 +223,7 @@ if __name__ == '__main__':
         SERVER_IP = get_public_ip()
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         home_assistant = HomeAssistant(SERVER_IP, 12345, server_socket)
+        home_assistant.setup_server_socket()
         home_assistant.start()
 
     except KeyboardInterrupt:
