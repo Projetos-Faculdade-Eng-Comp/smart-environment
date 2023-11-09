@@ -7,9 +7,8 @@ from concurrent import futures
 import air_conditioner_service_pb2
 import air_conditioner_service_pb2_grpc
 
-
 global status
-status=False
+status = False
 
 global mean_temperature
 mean_temperature = 25
@@ -28,7 +27,8 @@ def sensor_thread():
             pika.ConnectionParameters(host='localhost'))
         channel = connection.channel()
         channel.exchange_declare(exchange='devices', exchange_type='direct')
-        while (1):
+
+        while True:
             temp_level = read_temperature_data()
             print(f"Temperatura: {temp_level}")
             channel.basic_publish(exchange='devices', routing_key='air_cond', body=temp_level)
@@ -67,9 +67,27 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
         else:
             return air_conditioner_service_pb2.Status(message="O ar condicionado já está desligado")
 
-    
+    def aumentarTemp(self, request, context):
+        global mean_temperature
+        global status
 
+        if status:
+            print("Aumentando a temperatura")
+            mean_temperature += 1  # Aumenta a temperatura
+            return air_conditioner_service_pb2.Status(message="Temperatura aumentada com sucesso")
+        else:
+            return air_conditioner_service_pb2.Status(message="O ar condicionado está desligado, não é possível aumentar a temperatura")
 
+    def diminuirTemp(self, request, context):
+        global mean_temperature
+        global status
+
+        if status:
+            print("Diminuindo a temperatura")
+            mean_temperature -= 1  # Diminui a temperatura
+            return air_conditioner_service_pb2.Status(message="Temperatura diminuída com sucesso")
+        else:
+            return air_conditioner_service_pb2.Status(message="O ar condicionado está desligado, não é possível diminuir a temperatura")
 
 def atuador_thread():
     try:
