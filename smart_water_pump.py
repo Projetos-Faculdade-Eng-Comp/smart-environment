@@ -4,8 +4,8 @@ import numpy as np
 import threading
 import grpc
 from concurrent import futures
-import water_pump_service_pb2_grpc
-import water_pump_service_pb2
+import actuators_service_pb2
+import actuators_service_pb2_grpc
 
 global mean_humidity
 mean_humidity = 60
@@ -39,7 +39,7 @@ def sensor_thread():
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-class WaterPumpService(water_pump_service_pb2_grpc.WaterPumpServiceServicer):
+class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     
     def TurnOnWaterPump(self, request, context):
         global mean_humidity
@@ -49,9 +49,9 @@ class WaterPumpService(water_pump_service_pb2_grpc.WaterPumpServiceServicer):
             print("Ligando a Bomba de água")
             mean_humidity += 10  # Aumenta a umidade
             status = True
-            return water_pump_service_pb2.Status(message="Bomba de água ligada com sucesso")
+            return actuators_service_pb2.Status(message="Bomba de água ligada com sucesso")
         else:
-            return water_pump_service_pb2.Status(message="A Bomba de água já está ligada")
+            return actuators_service_pb2.Status(message="A Bomba de água já está ligada")
 
     def TurnOffWaterPump(self, request, context):
         global mean_humidity
@@ -61,14 +61,14 @@ class WaterPumpService(water_pump_service_pb2_grpc.WaterPumpServiceServicer):
             print("Desligando a Bomba de água")
             mean_humidity -= 10  # Diminui a umidade
             status = False
-            return water_pump_service_pb2.Status(message="bomba de água desligada com sucesso")
+            return actuators_service_pb2.Status(message="bomba de água desligada com sucesso")
         else:
-            return water_pump_service_pb2.Status(message="A bomba de água já está desligada")
+            return actuators_service_pb2.Status(message="A bomba de água já está desligada")
 
 def atuador_thread():
     try:
         server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        water_pump_service_pb2_grpc.add_WaterPumpServiceServicer_to_server(WaterPumpService(), server)
+        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
         server.add_insecure_port('[::]:50053')
         server.start()
         server.wait_for_termination()

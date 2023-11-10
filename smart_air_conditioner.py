@@ -4,8 +4,9 @@ import numpy as np
 import threading
 import grpc
 from concurrent import futures
-import air_conditioner_service_pb2
-import air_conditioner_service_pb2_grpc
+import actuators_service_pb2
+import actuators_service_pb2_grpc
+
 
 global status
 status = False
@@ -42,7 +43,7 @@ def sensor_thread():
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServiceServicer):
+class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     def ligarArCondicionado(self, request, context):
         global mean_temperature
         global status
@@ -51,9 +52,9 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
             print("Ligando o ar condicionado")
             mean_temperature -= 2  # Diminui a temperatura
             status = True
-            return air_conditioner_service_pb2.Status(message="Ar condicionado ligado com sucesso")
+            return actuators_service_pb2.Status(message="Ar condicionado ligado com sucesso")
         else:
-            return air_conditioner_service_pb2.Status(message="O ar condicionado já está ligado")
+            return actuators_service_pb2.Status(message="O ar condicionado já está ligado")
 
     def desligarArCondicionado(self, request, context):
         global mean_temperature
@@ -63,9 +64,9 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
             print("Desligando o ar condicionado")
             mean_temperature += 2  # Aumenta a temperatura
             status = False
-            return air_conditioner_service_pb2.Status(message="Ar condicionado desligado com sucesso")
+            return actuators_service_pb2.Status(message="Ar condicionado desligado com sucesso")
         else:
-            return air_conditioner_service_pb2.Status(message="O ar condicionado já está desligado")
+            return actuators_service_pb2.Status(message="O ar condicionado já está desligado")
 
     def aumentarTemp(self, request, context):
         global mean_temperature
@@ -74,9 +75,9 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
         if status:
             print("Aumentando a temperatura")
             mean_temperature += 1  # Aumenta a temperatura
-            return air_conditioner_service_pb2.Status(message="Temperatura aumentada com sucesso")
+            return actuators_service_pb2.Status(message="Temperatura aumentada com sucesso")
         else:
-            return air_conditioner_service_pb2.Status(message="O ar condicionado está desligado, não é possível aumentar a temperatura")
+            return actuators_service_pb2.Status(message="O ar condicionado está desligado, não é possível aumentar a temperatura")
 
     def diminuirTemp(self, request, context):
         global mean_temperature
@@ -85,14 +86,14 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
         if status:
             print("Diminuindo a temperatura")
             mean_temperature -= 1  # Diminui a temperatura
-            return air_conditioner_service_pb2.Status(message="Temperatura diminuída com sucesso")
+            return actuators_service_pb2.Status(message="Temperatura diminuída com sucesso")
         else:
-            return air_conditioner_service_pb2.Status(message="O ar condicionado está desligado, não é possível diminuir a temperatura")
+            return actuators_service_pb2.Status(message="O ar condicionado está desligado, não é possível diminuir a temperatura")
 
 def atuador_thread():
     try:
         server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        air_conditioner_service_pb2_grpc.add_AirConditionerServiceServicer_to_server(AirConditionerService(), server)
+        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
         server.add_insecure_port('[::]:50052')
         server.start()
         server.wait_for_termination()

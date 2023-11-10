@@ -4,13 +4,15 @@ import numpy as np
 import threading
 import grpc
 from concurrent import futures
-import lamp_service_pb2
-import lamp_service_pb2_grpc
+import actuators_service_pb2
+import actuators_service_pb2_grpc
+
 
 global mean_light
 mean_light = 500
 global status
 status = False
+
 
 def read_light_data():
     global mean_light
@@ -19,6 +21,7 @@ def read_light_data():
     light_value = round(np.random.normal(mean_light, std_deviation), 1)
     light_message = f"{light_value}lx"
     return light_message
+
 
 def sensor_thread():
     try:
@@ -29,7 +32,8 @@ def sensor_thread():
         while True:
             light_level = read_light_data()
             print(f"Nível de luminosidade: {light_level}")
-            channel.basic_publish(exchange='devices', routing_key='lamp', body=light_level)
+            channel.basic_publish(exchange='devices',
+                                  routing_key='lamp', body=light_level)
             time.sleep(5)
 
         connection.close()
@@ -40,7 +44,9 @@ def sensor_thread():
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-class LampService(lamp_service_pb2_grpc.LampServiceServicer):
+
+class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
+    
     def ligarLampada(self, request, context):
         global mean_light
         global status
@@ -49,9 +55,9 @@ class LampService(lamp_service_pb2_grpc.LampServiceServicer):
             print("Ligando a lâmpada")
             mean_light += 100  # Aumenta a intensidade da luz
             status = True
-            return lamp_service_pb2.Status(message="Lâmpada ligada com sucesso")
+            return actuators_service_pb2.Status(message="Lâmpada ligada com sucesso")
         else:
-            return lamp_service_pb2.Status(message="A lâmpada já está ligada")
+            return actuators_service_pb2.Status(message="A lâmpada já está ligada")
 
     def desligarLampada(self, request, context):
         global mean_light
@@ -61,14 +67,16 @@ class LampService(lamp_service_pb2_grpc.LampServiceServicer):
             print("Desligando a lâmpada")
             mean_light -= 100  # Diminui a intensidade da luz
             status = False
-            return lamp_service_pb2.Status(message="Lâmpada desligada com sucesso")
+            return actuators_service_pb2.Status(message="Lâmpada desligada com sucesso")
         else:
-            return lamp_service_pb2.Status(message="A lâmpada já está desligada")
+            return actuators_service_pb2.Status(message="A lâmpada já está desligada")
+
 
 def atuador_thread():
     try:
-        server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        lamp_service_pb2_grpc.add_LampServiceServicer_to_server(LampService(), server)
+        server = grpc.server(
+            thread_pool=futures.ThreadPoolExecutor(max_workers=10))
+        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
         server.add_insecure_port('[::]:50051')
         server.start()
         server.wait_for_termination()
@@ -78,6 +86,7 @@ def atuador_thread():
         print('Encerrando o dispositivo atuador.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
+
 
 if __name__ == '__main__':
     sensor_thread = threading.Thread(target=sensor_thread)
