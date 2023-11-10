@@ -5,15 +5,9 @@ import socket
 import threading
 import time
 import grpc
-import lamp_service_pb2
-import lamp_service_pb2_grpc
-import air_conditioner_service_pb2
-import air_conditioner_service_pb2_grpc
-import water_pump_service_pb2_grpc
-import water_pump_service_pb2
-
 import actuators_service_pb2
 import actuators_service_pb2_grpc
+
 global LAMP
 global AIR
 global WATERPUMP
