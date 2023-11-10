@@ -208,7 +208,7 @@ class HomeAssistant:
 
                     elif device_num == 2:
                         while True:
-                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3-Aumentar\n4-Diminuir\n5 - show temperature"
+                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar temperatura\n4 - Diminuir temperatura\n5 - show temperature"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:

@@ -20,7 +20,6 @@ def send_message(server):
             sys.exit()
 
 
-# entao a primeira msg q eu recebo seria o menu?dps vou pra thread de enviar
 def receive_message(server):
     while True:
         message = server.recv(1024).decode()
