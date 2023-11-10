@@ -7,17 +7,17 @@ from concurrent import futures
 import water_pump_service_pb2_grpc
 import water_pump_service_pb2
 
-global mean_flow
-mean_flow = 30
+global mean_humidity
+mean_humidity = 60
 global status
 status = False
 
-def read_flow_data():
-    global mean_flow
-    std_deviation = 3.0  # Desvio padrão da luminosidade
+def read_humidity_data():
+    global mean_humidity
+    std_deviation = 1.0  # Desvio padrão da umidade
 
-    flow_value = round(np.random.normal(mean_flow, std_deviation), 1)
-    return f"{flow_value}L/min"
+    humidity_value = round(np.random.normal(mean_humidity, std_deviation), 1)
+    return f"{humidity_value}%"
 
 def sensor_thread():
     try:
@@ -26,9 +26,9 @@ def sensor_thread():
         channel = connection.channel()
         channel.exchange_declare(exchange='devices', exchange_type='direct')
         while True:
-            light_level = read_flow_data()
-            print(f"Vazão: {light_level}")
-            channel.basic_publish(exchange='devices', routing_key='water_pump', body=light_level)
+            humidity = read_humidity_data()
+            print(f"Umidade do solo: {humidity}")
+            channel.basic_publish(exchange='devices', routing_key='water_pump', body=humidity)
             time.sleep(5)
 
         connection.close()
@@ -42,28 +42,28 @@ def sensor_thread():
 class WaterPumpService(water_pump_service_pb2_grpc.WaterPumpServiceServicer):
     
     def TurnOnWaterPump(self, request, context):
-        global mean_flow
+        global mean_humidity
         global status
 
         if not status:
-            print("Ligando a Bomda de água")
-            mean_flow += 10  # Aumenta a intensidade da luz
+            print("Ligando a Bomba de água")
+            mean_humidity += 10  # Aumenta a umidade
             status = True
-            return water_pump_service_pb2.Status(message="Bomda de água ligada com sucesso")
+            return water_pump_service_pb2.Status(message="Bomba de água ligada com sucesso")
         else:
-            return water_pump_service_pb2.Status(message="A Bomda de água já está ligada")
+            return water_pump_service_pb2.Status(message="A Bomba de água já está ligada")
 
     def TurnOffWaterPump(self, request, context):
-        global mean_flow
+        global mean_humidity
         global status
 
         if status:
-            print("Desligando a Bomda de água")
-            mean_flow -= 10  # Diminui a intensidade da luz
+            print("Desligando a Bomba de água")
+            mean_humidity -= 10  # Diminui a umidade
             status = False
-            return water_pump_service_pb2.Status(message="Bomda de água desligada com sucesso")
+            return water_pump_service_pb2.Status(message="bomba de água desligada com sucesso")
         else:
-            return water_pump_service_pb2.Status(message="A Bomda de água já está desligada")
+            return water_pump_service_pb2.Status(message="A bomba de água já está desligada")
 
 def atuador_thread():
     try:

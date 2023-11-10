@@ -137,6 +137,7 @@ class HomeAssistant:
     def handle_air_conditioner(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel_air_cond = connection.channel()
+        channel_air_cond.exchange_declare(exchange='devices', exchange_type='direct')
         channel_air_cond.queue_declare(queue='air_conditioner_queue', exclusive=True)
         channel_air_cond.queue_bind(exchange='devices', queue='air_conditioner_queue', routing_key='air_cond')
         channel_air_cond.basic_consume(queue='air_conditioner_queue', on_message_callback=self.air_conditioner_callback, auto_ack=True)
