@@ -9,11 +9,15 @@ import lamp_service_pb2
 import lamp_service_pb2_grpc
 import air_conditioner_service_pb2
 import air_conditioner_service_pb2_grpc
+import water_pump_service_pb2_grpc
+import water_pump_service_pb2
 
 global LAMP
 global AIR
+global WATERPUMP
 LAMP = False
 AIR = False
+WATERPUMP = False
 
 def get_public_ip():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -45,7 +49,7 @@ class HomeAssistant:
         # Lista para armazenar mensagens
         self.messagesLamp = []
         self.messagesAir = []
-
+        self.messagesWaterPump = []
 
     # Para a lâmpada
     lamp_channel = grpc.insecure_channel('localhost:50051')  # Use o endereço correto do servidor gRPC da lâmpada
@@ -55,17 +59,22 @@ class HomeAssistant:
     air_channel = grpc.insecure_channel('localhost:50052')  # Use o endereço correto do servidor gRPC do ar condicionado
     air_stub = air_conditioner_service_pb2_grpc.AirConditionerServiceStub(air_channel)
 
+    # Para o Bomda de água
+    water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomda de água
+    water_pump_stub = water_pump_service_pb2_grpc.WaterPumpServiceStub(water_pump_channel)
 
     def start(self):
         self.connect_to_client()
 
         lamp_thread = threading.Thread(target=self.handle_lamp)
         air_cond_thread = threading.Thread(target=self.handle_air_conditioner)
+        water_pump_thread = threading.Thread(target=self.handle_water_pump)
         send_messages_devices_thread = threading.Thread(target=self.send_messages_devices)
         start_communication_thread = threading.Thread(target=self.start_communication)
 
         lamp_thread.start()
         air_cond_thread.start()
+        water_pump_thread.start()
         send_messages_devices_thread.start()
         start_communication_thread.start()
 
@@ -80,7 +89,13 @@ class HomeAssistant:
             self.messagesAir.append(body)
         else:
             self.messagesAir.clear()
-
+            
+    def water_pump_callback(self, ch, method, properties, body):
+        if len(self.messagesWaterPump) < 10:
+            self.messagesWaterPump.append(body)
+        else:
+            self.messagesWaterPump.clear()
+            
     def send_messages_devices(self):
         while True:
             if LAMP:
@@ -95,6 +110,15 @@ class HomeAssistant:
             if AIR:
                 if self.messagesAir:
                     message = self.messagesAir.pop(0)
+                    combined_message = b"ok:" + message
+                    self.client_socket.send(combined_message)
+                    time.sleep(1)
+                else:
+                    pass
+                
+            if WATERPUMP:
+                if self.messagesWaterPump:
+                    message = self.messagesWaterPump.pop(0)
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -118,6 +142,15 @@ class HomeAssistant:
         channel_air_cond.basic_consume(queue='air_conditioner_queue', on_message_callback=self.air_conditioner_callback, auto_ack=True)
         channel_air_cond.start_consuming()
 
+    def handle_water_pump(self):
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        channel_water_pump = connection.channel()
+        channel_water_pump.exchange_declare(exchange='devices', exchange_type='direct')
+        channel_water_pump.queue_declare(queue='water_pump_queue', exclusive=True)
+        channel_water_pump.queue_bind(exchange='devices', queue='water_pump_queue', routing_key='water_pump')
+        channel_water_pump.basic_consume(queue='water_pump_queue', on_message_callback=self.water_pump_callback, auto_ack=True)
+        channel_water_pump.start_consuming()
+        
     def connect_to_client(self):
         SERVER_IP = get_public_ip()
         SERVER_PORT = self.port
@@ -212,7 +245,33 @@ class HomeAssistant:
                 
                     elif device_num == 3:
                         # Lógica para Bomba D'água
-                        pass
+                        while True:
+                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Show Sensor"
+                            self.client_socket.send(menu1.encode())
+                            choice = int(self.client_socket.recv(1024).decode())
+                            if choice == 1:
+                                turn_on_request = water_pump_service_pb2.TurnOnWaterPumpRequest()
+                                response = self.water_pump_stub.TurnOnWaterPump(turn_on_request)
+                                self.client_socket.send(f"ok:{response.message}".encode())
+                                
+                            elif choice == 2:
+                                turn_off_request = water_pump_service_pb2.TurnOffWaterPumpRequest()
+                                response = self.water_pump_stub.TurnOffWaterPump(turn_off_request)
+                                self.client_socket.send(f"ok:{response.message}".encode())
+
+                            elif choice == 3: 
+                                # Lógica para Bomda de água
+                                global WATERPUMP
+                                WATERPUMP = True
+                                while WATERPUMP:
+                                    stop = self.client_socket.recv(1024).decode()
+                                    if stop == "0":
+                                        WATERPUMP = False
+                            elif choice == 0:
+                                break
+
+                            else: 
+                                self.client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
                 else:
                     self.client_socket.send("ok:Escolha inválida. Tente novamente.\n".encode())
             except ValueError:
