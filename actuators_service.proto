@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package actuators_service;
+
+service ActuatorsService {
+    rpc ligarLampada (LigarLampadaRequest) returns (Status);
+    rpc desligarLampada (DesligarLampadaRequest) returns (Status);
+    rpc ligarArCondicionado (AirConditionerRequest) returns (Status);
+    rpc desligarArCondicionado (AirConditionerRequest) returns (Status);
+    rpc aumentarTemp (AirConditionerRequest) returns (Status);
+    rpc diminuirTemp (AirConditionerRequest) returns (Status);
+    rpc TurnOnWaterPump (TurnOnWaterPumpRequest) returns (Status);
+    rpc TurnOffWaterPump (TurnOffWaterPumpRequest) returns (Status);
+}
+
+message LigarLampadaRequest {
+    // Campos do pedido para ligar a lâmpada, se necessário
+}
+  
+message DesligarLampadaRequest {
+    // Campos do pedido para desligar a lâmpada, se necessário
+}
+
+message AirConditionerRequest {
+    // Se houver campos específicos necessários para as solicitações, você pode defini-los aqui.
+}
+
+message TurnOnWaterPumpRequest {
+    // Campos do pedido para ligar a bomda de água, se necessário
+}
+  
+  message TurnOffWaterPumpRequest {
+    // Campos do pedido para desligar a bomda de água, se necessário
+}
+
+message Status {
+    string message = 1;
+  }
