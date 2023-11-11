@@ -8,11 +8,11 @@ service ActuatorsService {
 }
 
 message TurnOnRequest {
-    // Campos do pedido para ligar a bomda de água, se necessário
+
 }
   
   message TurnOffRequest {
-    // Campos do pedido para desligar a bomda de água, se necessário
+
 }
 
 message Status {
