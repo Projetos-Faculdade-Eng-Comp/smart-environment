@@ -7,21 +7,17 @@ from concurrent import futures
 import actuators_service_pb2
 import actuators_service_pb2_grpc
 
-
-global mean_light
-mean_light = 500
+global mean_humidity
+mean_humidity = 60
 global status
 status = False
 
+def read_humidity_data():
+    global mean_humidity
+    std_deviation = 1.0  # Desvio padrão da umidade
 
-def read_light_data():
-    global mean_light
-    std_deviation = 2.0  # Desvio padrão da luminosidade
-
-    light_value = round(np.random.normal(mean_light, std_deviation), 1)
-    light_message = f"{light_value}lx"
-    return light_message
-
+    humidity_value = round(np.random.normal(mean_humidity, std_deviation), 1)
+    return f"{humidity_value}%"
 
 def sensor_thread():
     try:
@@ -30,10 +26,9 @@ def sensor_thread():
         channel = connection.channel()
         channel.exchange_declare(exchange='devices', exchange_type='direct')
         while True:
-            light_level = read_light_data()
-            print(f"Nível de luminosidade: {light_level}")
-            channel.basic_publish(exchange='devices',
-                                  routing_key='lamp', body=light_level)
+            humidity = read_humidity_data()
+            print(f"Umidade do solo: {humidity}")
+            channel.basic_publish(exchange='devices', routing_key='water_pump', body=humidity)
             time.sleep(5)
 
         connection.close()
@@ -44,40 +39,37 @@ def sensor_thread():
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     
     def turnOn(self, request, context):
-        global mean_light
+        global mean_humidity
         global status
 
         if not status:
-            print("Ligando a lâmpada")
-            mean_light += 100  # Aumenta a intensidade da luz
+            print("Ligando a Bomba de água")
+            mean_humidity += 10  # Aumenta a umidade
             status = True
-            return actuators_service_pb2.Status(message="Lâmpada ligada com sucesso")
+            return actuators_service_pb2.Status(message="Bomba de água ligada com sucesso")
         else:
-            return actuators_service_pb2.Status(message="A lâmpada já está ligada")
+            return actuators_service_pb2.Status(message="A Bomba de água já está ligada")
 
     def turnOff(self, request, context):
-        global mean_light
+        global mean_humidity
         global status
 
         if status:
-            print("Desligando a lâmpada")
-            mean_light -= 100  # Diminui a intensidade da luz
+            print("Desligando a Bomba de água")
+            mean_humidity -= 10  # Diminui a umidade
             status = False
-            return actuators_service_pb2.Status(message="Lâmpada desligada com sucesso")
+            return actuators_service_pb2.Status(message="bomba de água desligada com sucesso")
         else:
-            return actuators_service_pb2.Status(message="A lâmpada já está desligada")
-
+            return actuators_service_pb2.Status(message="A bomba de água já está desligada")
 
 def atuador_thread():
     try:
-        server = grpc.server(
-            thread_pool=futures.ThreadPoolExecutor(max_workers=10))
+        server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
         actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
-        server.add_insecure_port('[::]:50051')
+        server.add_insecure_port('[::]:50053')
         server.start()
         server.wait_for_termination()
     except grpc.RpcError as e:
@@ -86,7 +78,6 @@ def atuador_thread():
         print('Encerrando o dispositivo atuador.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
-
 
 if __name__ == '__main__':
     sensor_thread = threading.Thread(target=sensor_thread)

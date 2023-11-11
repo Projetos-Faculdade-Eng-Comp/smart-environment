@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package actuators_service;
+
+service ActuatorsService {
+    rpc turnOn (TurnOnRequest) returns (Status) {}
+    rpc turnOff (TurnOffRequest) returns (Status) {}
+}
+
+message TurnOnRequest {
+    // Campos do pedido para ligar a bomda de água, se necessário
+}
+  
+  message TurnOffRequest {
+    // Campos do pedido para desligar a bomda de água, se necessário
+}
+
+message Status {
+    string message = 1;
+  }
