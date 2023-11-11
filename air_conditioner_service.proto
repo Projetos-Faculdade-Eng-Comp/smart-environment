@@ -3,8 +3,8 @@ syntax = "proto3";
 package air_conditioner_service;
 
 service AirConditionerService {
-  rpc turnOnAirnditioner (AirConditionerRequest) returns (Status);
-  rpc turnOffAirnditioner (AirConditionerRequest) returns (Status);
+  rpc turnOnAirConditioner (AirConditionerRequest) returns (Status);
+  rpc turnOffAirConditioner (AirConditionerRequest) returns (Status);
   rpc aumentarTemp (AirConditionerRequest) returns (Status);
   rpc diminuirTemp (AirConditionerRequest) returns (Status);
   

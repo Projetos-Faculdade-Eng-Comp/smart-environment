@@ -57,8 +57,8 @@ class HomeAssistant:
     air_channel = grpc.insecure_channel('localhost:50052')  # Use o endereço correto do servidor gRPC do ar condicionado
     air_stub = air_conditioner_service_pb2_grpc.AirConditionerServiceStub(air_channel)
 
-    # Para o Bomda de água
-    water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomda de água
+    # Para a bomba de água
+    water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomba de água
     water_pump_stub = actuators_service_pb2_grpc.ActuatorsServiceStub(water_pump_channel)
 
     def start(self):
@@ -98,7 +98,7 @@ class HomeAssistant:
         while True:
             if LAMP:
                 if self.messagesLamp:
-                    message = self.messagesLamp.pop(0)
+                    message = self.messagesLamp.pop()
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -107,7 +107,7 @@ class HomeAssistant:
 
             if AIR:
                 if self.messagesAir:
-                    message = self.messagesAir.pop(0)
+                    message = self.messagesAir.pop()
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -210,14 +210,14 @@ class HomeAssistant:
 
                     elif device_num == 2:
                         while True:
-                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar temperatura\n4 - Diminuir temperatura\n5 - show temperature"
+                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar temperatura\n4 - Diminuir temperatura\n5 - show temperature"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                response = self.air_stub.turnOnAirnditioner(air_conditioner_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOnAirConditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 2:
-                                response = self.air_stub.turnOffAirnditioner(air_conditioner_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOffAirConditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 3:
                                 response = self.air_stub.aumentarTemp(air_conditioner_service_pb2.AirConditionerRequest())
@@ -259,7 +259,7 @@ class HomeAssistant:
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 3: 
-                                # Lógica para Bomda de água
+                                # Lógica para Bomba de água
                                 global WATERPUMP
                                 WATERPUMP = True
                                 while WATERPUMP:

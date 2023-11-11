@@ -44,7 +44,7 @@ def sensor_thread():
         print(f"Erro inesperado: {e}")
 
 class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServiceServicer):
-    def turnOnAirnditioner(self, request, context):
+    def turnOnAirConditioner(self, request, context):
         global mean_temperature
         global status
 
@@ -56,7 +56,7 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
         else:
             return air_conditioner_service_pb2.Status(message="O ar condicionado já está ligado")
 
-    def turnOffAirnditioner(self, request, context):
+    def turnOffAirConditioner(self, request, context):
         global mean_temperature
         global status
 

@@ -14,13 +14,13 @@ class AirConditionerServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.turnOnAirnditioner = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/turnOnAirnditioner',
+        self.turnOnAirConditioner = channel.unary_unary(
+                '/air_conditioner_service.AirConditionerService/turnOnAirConditioner',
                 request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
                 response_deserializer=air__conditioner__service__pb2.Status.FromString,
                 )
-        self.turnOffAirnditioner = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/turnOffAirnditioner',
+        self.turnOffAirConditioner = channel.unary_unary(
+                '/air_conditioner_service.AirConditionerService/turnOffAirConditioner',
                 request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
                 response_deserializer=air__conditioner__service__pb2.Status.FromString,
                 )
@@ -39,13 +39,13 @@ class AirConditionerServiceStub(object):
 class AirConditionerServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def turnOnAirnditioner(self, request, context):
+    def turnOnAirConditioner(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def turnOffAirnditioner(self, request, context):
+    def turnOffAirConditioner(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -66,13 +66,13 @@ class AirConditionerServiceServicer(object):
 
 def add_AirConditionerServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'turnOnAirnditioner': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOnAirnditioner,
+            'turnOnAirConditioner': grpc.unary_unary_rpc_method_handler(
+                    servicer.turnOnAirConditioner,
                     request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
                     response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
             ),
-            'turnOffAirnditioner': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOffAirnditioner,
+            'turnOffAirConditioner': grpc.unary_unary_rpc_method_handler(
+                    servicer.turnOffAirConditioner,
                     request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
                     response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
             ),
@@ -97,7 +97,7 @@ class AirConditionerService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def turnOnAirnditioner(request,
+    def turnOnAirConditioner(request,
             target,
             options=(),
             channel_credentials=None,
@@ -107,14 +107,14 @@ class AirConditionerService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOnAirnditioner',
+        return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOnAirConditioner',
             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
             air__conditioner__service__pb2.Status.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def turnOffAirnditioner(request,
+    def turnOffAirConditioner(request,
             target,
             options=(),
             channel_credentials=None,
@@ -124,7 +124,7 @@ class AirConditionerService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOffAirnditioner',
+        return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOffAirConditioner',
             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
             air__conditioner__service__pb2.Status.FromString,
             options, channel_credentials,
