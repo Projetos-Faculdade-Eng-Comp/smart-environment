@@ -41,7 +41,7 @@ def sensor_thread():
 
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     
-    def TurnOnWaterPump(self, request, context):
+    def turnOn(self, request, context):
         global mean_humidity
         global status
 
@@ -53,7 +53,7 @@ class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
         else:
             return actuators_service_pb2.Status(message="A Bomba de água já está ligada")
 
-    def TurnOffWaterPump(self, request, context):
+    def turnOff(self, request, context):
         global mean_humidity
         global status
 

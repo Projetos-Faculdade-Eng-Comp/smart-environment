@@ -7,6 +7,8 @@ import time
 import grpc
 import actuators_service_pb2
 import actuators_service_pb2_grpc
+import air_conditioner_service_pb2
+import air_conditioner_service_pb2_grpc
 
 global LAMP
 global AIR
@@ -53,7 +55,7 @@ class HomeAssistant:
 
     # Para o ar condicionado
     air_channel = grpc.insecure_channel('localhost:50052')  # Use o endereço correto do servidor gRPC do ar condicionado
-    air_stub = actuators_service_pb2_grpc.ActuatorsServiceStub(air_channel)
+    air_stub = air_conditioner_service_pb2_grpc.AirConditionerServiceStub(air_channel)
 
     # Para o Bomda de água
     water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomda de água
@@ -183,13 +185,13 @@ class HomeAssistant:
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                ligar_request = actuators_service_pb2.LigarLampadaRequest()
-                                response = self.lamp_stub.ligarLampada(ligar_request)
+                                ligar_request = actuators_service_pb2.TurnOnRequest()
+                                response = self.lamp_stub.turnOn(ligar_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
                                 
                             elif choice == 2:
-                                desligar_request = actuators_service_pb2.DesligarLampadaRequest()
-                                response = self.lamp_stub.desligarLampada(desligar_request)
+                                desligar_request = actuators_service_pb2.TurnOffRequest()
+                                response = self.lamp_stub.turnOff(desligar_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 3: 
@@ -212,17 +214,17 @@ class HomeAssistant:
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                response = self.air_stub.ligarArCondicionado(actuators_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOnAirnditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 2:
-                                response = self.air_stub.desligarArCondicionado(actuators_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOffAirnditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 3:
-                                response = self.air_stub.aumentarTemp(actuators_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.aumentarTemp(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 4:
-                                response = self.air_stub.diminuirTemp(actuators_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.diminuirTemp(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
 
@@ -247,13 +249,13 @@ class HomeAssistant:
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                turn_on_request = actuators_service_pb2.TurnOnWaterPumpRequest()
-                                response = self.water_pump_stub.TurnOnWaterPump(turn_on_request)
+                                turn_on_request = actuators_service_pb2.TurnOnRequest()
+                                response = self.water_pump_stub.turnOn(turn_on_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
                                 
                             elif choice == 2:
-                                turn_off_request = actuators_service_pb2.TurnOffWaterPumpRequest()
-                                response = self.water_pump_stub.TurnOffWaterPump(turn_off_request)
+                                turn_off_request = actuators_service_pb2.TurnOffRequest()
+                                response = self.water_pump_stub.turnOff(turn_off_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 3: 

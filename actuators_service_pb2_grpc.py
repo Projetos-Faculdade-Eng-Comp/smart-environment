@@ -14,44 +14,14 @@ class ActuatorsServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ligarLampada = channel.unary_unary(
-                '/actuators_service.ActuatorsService/ligarLampada',
-                request_serializer=actuators__service__pb2.LigarLampadaRequest.SerializeToString,
+        self.turnOn = channel.unary_unary(
+                '/actuators_service.ActuatorsService/turnOn',
+                request_serializer=actuators__service__pb2.TurnOnRequest.SerializeToString,
                 response_deserializer=actuators__service__pb2.Status.FromString,
                 )
-        self.desligarLampada = channel.unary_unary(
-                '/actuators_service.ActuatorsService/desligarLampada',
-                request_serializer=actuators__service__pb2.DesligarLampadaRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.ligarArCondicionado = channel.unary_unary(
-                '/actuators_service.ActuatorsService/ligarArCondicionado',
-                request_serializer=actuators__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.desligarArCondicionado = channel.unary_unary(
-                '/actuators_service.ActuatorsService/desligarArCondicionado',
-                request_serializer=actuators__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.aumentarTemp = channel.unary_unary(
-                '/actuators_service.ActuatorsService/aumentarTemp',
-                request_serializer=actuators__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.diminuirTemp = channel.unary_unary(
-                '/actuators_service.ActuatorsService/diminuirTemp',
-                request_serializer=actuators__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.TurnOnWaterPump = channel.unary_unary(
-                '/actuators_service.ActuatorsService/TurnOnWaterPump',
-                request_serializer=actuators__service__pb2.TurnOnWaterPumpRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
-        self.TurnOffWaterPump = channel.unary_unary(
-                '/actuators_service.ActuatorsService/TurnOffWaterPump',
-                request_serializer=actuators__service__pb2.TurnOffWaterPumpRequest.SerializeToString,
+        self.turnOff = channel.unary_unary(
+                '/actuators_service.ActuatorsService/turnOff',
+                request_serializer=actuators__service__pb2.TurnOffRequest.SerializeToString,
                 response_deserializer=actuators__service__pb2.Status.FromString,
                 )
 
@@ -59,49 +29,13 @@ class ActuatorsServiceStub(object):
 class ActuatorsServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def ligarLampada(self, request, context):
+    def turnOn(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def desligarLampada(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ligarArCondicionado(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def desligarArCondicionado(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def aumentarTemp(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def diminuirTemp(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def TurnOnWaterPump(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def TurnOffWaterPump(self, request, context):
+    def turnOff(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -110,44 +44,14 @@ class ActuatorsServiceServicer(object):
 
 def add_ActuatorsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ligarLampada': grpc.unary_unary_rpc_method_handler(
-                    servicer.ligarLampada,
-                    request_deserializer=actuators__service__pb2.LigarLampadaRequest.FromString,
+            'turnOn': grpc.unary_unary_rpc_method_handler(
+                    servicer.turnOn,
+                    request_deserializer=actuators__service__pb2.TurnOnRequest.FromString,
                     response_serializer=actuators__service__pb2.Status.SerializeToString,
             ),
-            'desligarLampada': grpc.unary_unary_rpc_method_handler(
-                    servicer.desligarLampada,
-                    request_deserializer=actuators__service__pb2.DesligarLampadaRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'ligarArCondicionado': grpc.unary_unary_rpc_method_handler(
-                    servicer.ligarArCondicionado,
-                    request_deserializer=actuators__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'desligarArCondicionado': grpc.unary_unary_rpc_method_handler(
-                    servicer.desligarArCondicionado,
-                    request_deserializer=actuators__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'aumentarTemp': grpc.unary_unary_rpc_method_handler(
-                    servicer.aumentarTemp,
-                    request_deserializer=actuators__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'diminuirTemp': grpc.unary_unary_rpc_method_handler(
-                    servicer.diminuirTemp,
-                    request_deserializer=actuators__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'TurnOnWaterPump': grpc.unary_unary_rpc_method_handler(
-                    servicer.TurnOnWaterPump,
-                    request_deserializer=actuators__service__pb2.TurnOnWaterPumpRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'TurnOffWaterPump': grpc.unary_unary_rpc_method_handler(
-                    servicer.TurnOffWaterPump,
-                    request_deserializer=actuators__service__pb2.TurnOffWaterPumpRequest.FromString,
+            'turnOff': grpc.unary_unary_rpc_method_handler(
+                    servicer.turnOff,
+                    request_deserializer=actuators__service__pb2.TurnOffRequest.FromString,
                     response_serializer=actuators__service__pb2.Status.SerializeToString,
             ),
     }
@@ -161,7 +65,7 @@ class ActuatorsService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def ligarLampada(request,
+    def turnOn(request,
             target,
             options=(),
             channel_credentials=None,
@@ -171,14 +75,14 @@ class ActuatorsService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/ligarLampada',
-            actuators__service__pb2.LigarLampadaRequest.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/turnOn',
+            actuators__service__pb2.TurnOnRequest.SerializeToString,
             actuators__service__pb2.Status.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def desligarLampada(request,
+    def turnOff(request,
             target,
             options=(),
             channel_credentials=None,
@@ -188,110 +92,8 @@ class ActuatorsService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/desligarLampada',
-            actuators__service__pb2.DesligarLampadaRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ligarArCondicionado(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/ligarArCondicionado',
-            actuators__service__pb2.AirConditionerRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def desligarArCondicionado(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/desligarArCondicionado',
-            actuators__service__pb2.AirConditionerRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def aumentarTemp(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/aumentarTemp',
-            actuators__service__pb2.AirConditionerRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def diminuirTemp(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/diminuirTemp',
-            actuators__service__pb2.AirConditionerRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def TurnOnWaterPump(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/TurnOnWaterPump',
-            actuators__service__pb2.TurnOnWaterPumpRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def TurnOffWaterPump(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/TurnOffWaterPump',
-            actuators__service__pb2.TurnOffWaterPumpRequest.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/turnOff',
+            actuators__service__pb2.TurnOffRequest.SerializeToString,
             actuators__service__pb2.Status.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -47,7 +47,7 @@ def sensor_thread():
 
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     
-    def ligarLampada(self, request, context):
+    def turnOn(self, request, context):
         global mean_light
         global status
 
@@ -59,7 +59,7 @@ class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
         else:
             return actuators_service_pb2.Status(message="A lâmpada já está ligada")
 
-    def desligarLampada(self, request, context):
+    def turnOff(self, request, context):
         global mean_light
         global status
 

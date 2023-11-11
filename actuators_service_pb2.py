@@ -13,25 +13,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x61\x63tuators_service.proto\x12\x11\x61\x63tuators_service\"\x15\n\x13LigarLampadaRequest\"\x18\n\x16\x44\x65sligarLampadaRequest\"\x17\n\x15\x41irConditionerRequest\"\x18\n\x16TurnOnWaterPumpRequest\"\x19\n\x17TurnOffWaterPumpRequest\"\x19\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t2\xd7\x05\n\x10\x41\x63tuatorsService\x12Q\n\x0cligarLampada\x12&.actuators_service.LigarLampadaRequest\x1a\x19.actuators_service.Status\x12W\n\x0f\x64\x65sligarLampada\x12).actuators_service.DesligarLampadaRequest\x1a\x19.actuators_service.Status\x12Z\n\x13ligarArCondicionado\x12(.actuators_service.AirConditionerRequest\x1a\x19.actuators_service.Status\x12]\n\x16\x64\x65sligarArCondicionado\x12(.actuators_service.AirConditionerRequest\x1a\x19.actuators_service.Status\x12S\n\x0c\x61umentarTemp\x12(.actuators_service.AirConditionerRequest\x1a\x19.actuators_service.Status\x12S\n\x0c\x64iminuirTemp\x12(.actuators_service.AirConditionerRequest\x1a\x19.actuators_service.Status\x12W\n\x0fTurnOnWaterPump\x12).actuators_service.TurnOnWaterPumpRequest\x1a\x19.actuators_service.Status\x12Y\n\x10TurnOffWaterPump\x12*.actuators_service.TurnOffWaterPumpRequest\x1a\x19.actuators_service.Statusb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x61\x63tuators_service.proto\x12\x11\x61\x63tuators_service\"\x0f\n\rTurnOnRequest\"\x10\n\x0eTurnOffRequest\"\x19\n\x06Status\x12\x0f\n\x07message\x18\x01 \x01(\t2\xa6\x01\n\x10\x41\x63tuatorsService\x12G\n\x06turnOn\x12 .actuators_service.TurnOnRequest\x1a\x19.actuators_service.Status\"\x00\x12I\n\x07turnOff\x12!.actuators_service.TurnOffRequest\x1a\x19.actuators_service.Status\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'actuators_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_LIGARLAMPADAREQUEST']._serialized_start=46
-  _globals['_LIGARLAMPADAREQUEST']._serialized_end=67
-  _globals['_DESLIGARLAMPADAREQUEST']._serialized_start=69
-  _globals['_DESLIGARLAMPADAREQUEST']._serialized_end=93
-  _globals['_AIRCONDITIONERREQUEST']._serialized_start=95
-  _globals['_AIRCONDITIONERREQUEST']._serialized_end=118
-  _globals['_TURNONWATERPUMPREQUEST']._serialized_start=120
-  _globals['_TURNONWATERPUMPREQUEST']._serialized_end=144
-  _globals['_TURNOFFWATERPUMPREQUEST']._serialized_start=146
-  _globals['_TURNOFFWATERPUMPREQUEST']._serialized_end=171
-  _globals['_STATUS']._serialized_start=173
-  _globals['_STATUS']._serialized_end=198
-  _globals['_ACTUATORSSERVICE']._serialized_start=201
-  _globals['_ACTUATORSSERVICE']._serialized_end=928
+  _globals['_TURNONREQUEST']._serialized_start=46
+  _globals['_TURNONREQUEST']._serialized_end=61
+  _globals['_TURNOFFREQUEST']._serialized_start=63
+  _globals['_TURNOFFREQUEST']._serialized_end=79
+  _globals['_STATUS']._serialized_start=81
+  _globals['_STATUS']._serialized_end=106
+  _globals['_ACTUATORSSERVICE']._serialized_start=109
+  _globals['_ACTUATORSSERVICE']._serialized_end=275
 # @@protoc_insertion_point(module_scope)

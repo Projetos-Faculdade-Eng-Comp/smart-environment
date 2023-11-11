@@ -4,23 +4,11 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class LigarLampadaRequest(_message.Message):
+class TurnOnRequest(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
 
-class DesligarLampadaRequest(_message.Message):
-    __slots__ = []
-    def __init__(self) -> None: ...
-
-class AirConditionerRequest(_message.Message):
-    __slots__ = []
-    def __init__(self) -> None: ...
-
-class TurnOnWaterPumpRequest(_message.Message):
-    __slots__ = []
-    def __init__(self) -> None: ...
-
-class TurnOffWaterPumpRequest(_message.Message):
+class TurnOffRequest(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
 
