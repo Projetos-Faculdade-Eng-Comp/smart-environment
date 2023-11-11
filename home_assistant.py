@@ -98,7 +98,7 @@ class HomeAssistant:
         while True:
             if LAMP:
                 if self.messagesLamp:
-                    message = self.messagesLamp.pop()
+                    message = self.messagesLamp.pop(0)
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -107,7 +107,7 @@ class HomeAssistant:
 
             if AIR:
                 if self.messagesAir:
-                    message = self.messagesAir.pop()
+                    message = self.messagesAir.pop(0)
                     combined_message = b"ok:" + message
                     self.client_socket.send(combined_message)
                     time.sleep(1)
@@ -181,6 +181,7 @@ class HomeAssistant:
                     # Lógica para lidar com o dispositivo escolhido
                     if device_num == 1:
                         while True:
+                            time.sleep(1)
                             menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - show luminosity"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
@@ -210,6 +211,7 @@ class HomeAssistant:
 
                     elif device_num == 2:
                         while True:
+                            time.sleep(1)
                             menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar temperatura\n4 - Diminuir temperatura\n5 - show temperature"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
@@ -245,6 +247,7 @@ class HomeAssistant:
                     elif device_num == 3:
                         # Lógica para Bomba D'água
                         while True:
+                            time.sleep(1)
                             menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - show soil moisture"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
