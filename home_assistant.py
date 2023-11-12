@@ -123,14 +123,6 @@ class HomeAssistant:
                 else:
                     pass
                 
-            if WATERPUMP:
-                if self.messagesWaterPump:
-                    message = self.messagesWaterPump.pop(0)
-                    combined_message = b"ok:" + message
-                    self.client_socket.send(combined_message)
-                    time.sleep(1)
-                else:
-                    pass
 
     def handle_lamp(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
