@@ -11,7 +11,7 @@ service AirConditionerService {
 }
 
 message AirConditionerRequest {
-  // Se houver campos específicos necessários para as solicitações, você pode defini-los aqui.
+ 
 }
 
 message Status {
