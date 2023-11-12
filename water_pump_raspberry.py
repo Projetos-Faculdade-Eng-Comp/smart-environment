@@ -37,16 +37,15 @@ def sensor_thread():
             print(f"Umidade ambiente: {humidity}")
             channel.basic_publish(exchange='devices', routing_key='water_pump', body=humidity)
             time.sleep(5)
-
-        connection.close()
     except pika.exceptions.AMQPConnectionError as e:
         print(f"Erro de conexão com RabbitMQ: {e}")
     except KeyboardInterrupt:
         print('Encerrando o dispositivo sensor.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
-    if connection and connection.is_open:
-        connection.close()
+    finally:
+        if connection and connection.is_open:
+            connection.close()
 
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     
@@ -84,8 +83,6 @@ def atuador_thread():
         print('Encerrando o dispositivo atuador.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
-    if connection and connection.is_open:
-        connection.close()
 
 if __name__ == '__main__':
     sensor_thread = threading.Thread(target=sensor_thread)
