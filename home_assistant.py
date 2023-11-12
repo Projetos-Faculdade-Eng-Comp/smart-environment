@@ -32,7 +32,7 @@ class HomeAssistant:
         self.devices = {
             1: "Lâmpada",
             2: "Ar condicionado",
-            3: "Bomba D'água"
+            3: "Umidificador de ar"
         }
         self.server_socket = socket
 
