@@ -17,4 +17,4 @@ message TurnOnRequest {
 
 message Status {
     string message = 1;
-  }
+}
