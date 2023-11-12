@@ -5,12 +5,10 @@ import socket
 import threading
 import time
 import grpc
-import lamp_service_pb2
-import lamp_service_pb2_grpc
+import actuators_service_pb2
+import actuators_service_pb2_grpc
 import air_conditioner_service_pb2
 import air_conditioner_service_pb2_grpc
-import water_pump_service_pb2_grpc
-import water_pump_service_pb2
 
 global LAMP
 global AIR
@@ -53,15 +51,15 @@ class HomeAssistant:
 
     # Para a lâmpada
     lamp_channel = grpc.insecure_channel('localhost:50051')  # Use o endereço correto do servidor gRPC da lâmpada
-    lamp_stub = lamp_service_pb2_grpc.LampServiceStub(lamp_channel)
+    lamp_stub = actuators_service_pb2_grpc.ActuatorsServiceStub(lamp_channel)
 
     # Para o ar condicionado
     air_channel = grpc.insecure_channel('localhost:50052')  # Use o endereço correto do servidor gRPC do ar condicionado
     air_stub = air_conditioner_service_pb2_grpc.AirConditionerServiceStub(air_channel)
 
-    # Para o Bomda de água
-    water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomda de água
-    water_pump_stub = water_pump_service_pb2_grpc.WaterPumpServiceStub(water_pump_channel)
+    # Para a bomba de água
+    water_pump_channel = grpc.insecure_channel('localhost:50053')  # Use o endereço correto do servidor gRPC da Bomba de água
+    water_pump_stub = actuators_service_pb2_grpc.ActuatorsServiceStub(water_pump_channel)
 
     def start(self):
         self.connect_to_client()
@@ -124,6 +122,15 @@ class HomeAssistant:
                     time.sleep(5)
                 else:
                     pass
+                
+            if WATERPUMP:
+                if self.messagesWaterPump:
+                    message = self.messagesWaterPump.pop(0)
+                    combined_message = b"ok:" + message
+                    self.client_socket.send(combined_message)
+                    time.sleep(1)
+                else:
+                    pass
 
     def handle_lamp(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
@@ -137,6 +144,7 @@ class HomeAssistant:
     def handle_air_conditioner(self):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         channel_air_cond = connection.channel()
+        channel_air_cond.exchange_declare(exchange='devices', exchange_type='direct')
         channel_air_cond.queue_declare(queue='air_conditioner_queue', exclusive=True)
         channel_air_cond.queue_bind(exchange='devices', queue='air_conditioner_queue', routing_key='air_cond')
         channel_air_cond.basic_consume(queue='air_conditioner_queue', on_message_callback=self.air_conditioner_callback, auto_ack=True)
@@ -182,17 +190,18 @@ class HomeAssistant:
                     # Lógica para lidar com o dispositivo escolhido
                     if device_num == 1:
                         while True:
-                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - VerSensor"
+                            time.sleep(1)
+                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Ver Sensor"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                ligar_request = lamp_service_pb2.LigarLampadaRequest()
-                                response = self.lamp_stub.ligarLampada(ligar_request)
+                                ligar_request = actuators_service_pb2.TurnOnRequest()
+                                response = self.lamp_stub.turnOn(ligar_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
                                 
                             elif choice == 2:
-                                desligar_request = lamp_service_pb2.DesligarLampadaRequest()
-                                response = self.lamp_stub.desligarLampada(desligar_request)
+                                desligar_request = actuators_service_pb2.TurnOffRequest()
+                                response = self.lamp_stub.turnOff(desligar_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 3: 
@@ -211,14 +220,15 @@ class HomeAssistant:
 
                     elif device_num == 2:
                         while True:
-                            menu1 = "ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar\n4 - Diminuir\n5 - VerSensor"
+                            time.sleep(1)
+                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Aumentar temperatura\n4 - Diminuir temperatura\n5 - Ver Sensor"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                response = self.air_stub.ligarArCondicionado(air_conditioner_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOnAirConditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 2:
-                                response = self.air_stub.desligarArCondicionado(air_conditioner_service_pb2.AirConditionerRequest())
+                                response = self.air_stub.turnOffAirConditioner(air_conditioner_service_pb2.AirConditionerRequest())
                                 self.client_socket.send(f"ok:{response.message}".encode())
                             elif choice == 3:
                                 response = self.air_stub.aumentarTemp(air_conditioner_service_pb2.AirConditionerRequest())
@@ -246,21 +256,22 @@ class HomeAssistant:
                     elif device_num == 3:
                         # Lógica para Bomba D'água
                         while True:
-                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Show Sensor"
+                            time.sleep(1)
+                            menu1 = "\ok:\n0 - Voltar\n1 - Ligar\n2 - Desligar\n3 - Ver Sensor"
                             self.client_socket.send(menu1.encode())
                             choice = int(self.client_socket.recv(1024).decode())
                             if choice == 1:
-                                turn_on_request = water_pump_service_pb2.TurnOnWaterPumpRequest()
-                                response = self.water_pump_stub.TurnOnWaterPump(turn_on_request)
+                                turn_on_request = actuators_service_pb2.TurnOnRequest()
+                                response = self.water_pump_stub.turnOn(turn_on_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
                                 
                             elif choice == 2:
-                                turn_off_request = water_pump_service_pb2.TurnOffWaterPumpRequest()
-                                response = self.water_pump_stub.TurnOffWaterPump(turn_off_request)
+                                turn_off_request = actuators_service_pb2.TurnOffRequest()
+                                response = self.water_pump_stub.turnOff(turn_off_request)
                                 self.client_socket.send(f"ok:{response.message}".encode())
 
                             elif choice == 3: 
-                                # Lógica para Bomda de água
+                                # Lógica para Bomba de água
                                 global WATERPUMP
                                 WATERPUMP = True
                                 while WATERPUMP:
