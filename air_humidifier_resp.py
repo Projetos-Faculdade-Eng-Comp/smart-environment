@@ -56,7 +56,7 @@ class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
             pinPump.value = True
             status = True
 
-            return actuators_service_pb2.Status(message="Bomba de água ligada com sucesso")
+            return actuators_service_pb2.Status(message="U com sucesso")
         else:
             return actuators_service_pb2.Status(message="A Bomba de água já está ligada")
 
