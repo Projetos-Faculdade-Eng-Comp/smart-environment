@@ -46,7 +46,7 @@ def sensor_thread():
 
 
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
-    
+
     def turnOn(self, request, context):
         global mean_light
         global status
@@ -76,7 +76,8 @@ def atuador_thread():
     try:
         server = grpc.server(
             thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
+        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(
+            ActuatorsService(), server)
         server.add_insecure_port('[::]:50051')
         server.start()
         server.wait_for_termination()

@@ -15,25 +15,25 @@ class AirConditionerServiceStub(object):
             channel: A grpc.Channel.
         """
         self.turnOnAirConditioner = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/turnOnAirConditioner',
-                request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=air__conditioner__service__pb2.Status.FromString,
-                )
+            '/air_conditioner_service.AirConditionerService/turnOnAirConditioner',
+            request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+            response_deserializer=air__conditioner__service__pb2.Status.FromString,
+        )
         self.turnOffAirConditioner = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/turnOffAirConditioner',
-                request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=air__conditioner__service__pb2.Status.FromString,
-                )
+            '/air_conditioner_service.AirConditionerService/turnOffAirConditioner',
+            request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+            response_deserializer=air__conditioner__service__pb2.Status.FromString,
+        )
         self.aumentarTemp = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/aumentarTemp',
-                request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=air__conditioner__service__pb2.Status.FromString,
-                )
+            '/air_conditioner_service.AirConditionerService/aumentarTemp',
+            request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+            response_deserializer=air__conditioner__service__pb2.Status.FromString,
+        )
         self.diminuirTemp = channel.unary_unary(
-                '/air_conditioner_service.AirConditionerService/diminuirTemp',
-                request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-                response_deserializer=air__conditioner__service__pb2.Status.FromString,
-                )
+            '/air_conditioner_service.AirConditionerService/diminuirTemp',
+            request_serializer=air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+            response_deserializer=air__conditioner__service__pb2.Status.FromString,
+        )
 
 
 class AirConditionerServiceServicer(object):
@@ -66,100 +66,101 @@ class AirConditionerServiceServicer(object):
 
 def add_AirConditionerServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'turnOnAirConditioner': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOnAirConditioner,
-                    request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
-            ),
-            'turnOffAirConditioner': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOffAirConditioner,
-                    request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
-            ),
-            'aumentarTemp': grpc.unary_unary_rpc_method_handler(
-                    servicer.aumentarTemp,
-                    request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
-            ),
-            'diminuirTemp': grpc.unary_unary_rpc_method_handler(
-                    servicer.diminuirTemp,
-                    request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
-                    response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
-            ),
+        'turnOnAirConditioner': grpc.unary_unary_rpc_method_handler(
+            servicer.turnOnAirConditioner,
+            request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
+            response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
+        ),
+        'turnOffAirConditioner': grpc.unary_unary_rpc_method_handler(
+            servicer.turnOffAirConditioner,
+            request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
+            response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
+        ),
+        'aumentarTemp': grpc.unary_unary_rpc_method_handler(
+            servicer.aumentarTemp,
+            request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
+            response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
+        ),
+        'diminuirTemp': grpc.unary_unary_rpc_method_handler(
+            servicer.diminuirTemp,
+            request_deserializer=air__conditioner__service__pb2.AirConditionerRequest.FromString,
+            response_serializer=air__conditioner__service__pb2.Status.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'air_conditioner_service.AirConditionerService', rpc_method_handlers)
+        'air_conditioner_service.AirConditionerService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
-
  # This class is part of an EXPERIMENTAL API.
+
+
 class AirConditionerService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def turnOnAirConditioner(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                             target,
+                             options=(),
+                             channel_credentials=None,
+                             call_credentials=None,
+                             insecure=False,
+                             compression=None,
+                             wait_for_ready=None,
+                             timeout=None,
+                             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOnAirConditioner',
-            air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-            air__conditioner__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+                                             air__conditioner__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def turnOffAirConditioner(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/turnOffAirConditioner',
-            air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-            air__conditioner__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+                                             air__conditioner__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def aumentarTemp(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                     target,
+                     options=(),
+                     channel_credentials=None,
+                     call_credentials=None,
+                     insecure=False,
+                     compression=None,
+                     wait_for_ready=None,
+                     timeout=None,
+                     metadata=None):
         return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/aumentarTemp',
-            air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-            air__conditioner__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+                                             air__conditioner__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def diminuirTemp(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                     target,
+                     options=(),
+                     channel_credentials=None,
+                     call_credentials=None,
+                     insecure=False,
+                     compression=None,
+                     wait_for_ready=None,
+                     timeout=None,
+                     metadata=None):
         return grpc.experimental.unary_unary(request, target, '/air_conditioner_service.AirConditionerService/diminuirTemp',
-            air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
-            air__conditioner__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             air__conditioner__service__pb2.AirConditionerRequest.SerializeToString,
+                                             air__conditioner__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

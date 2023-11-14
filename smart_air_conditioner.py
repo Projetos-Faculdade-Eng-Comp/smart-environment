@@ -14,6 +14,7 @@ status = False
 global mean_temperature
 mean_temperature = 25
 
+
 def read_temperature_data():
     global mean_temperature
     std_deviation = 0.1  # Desvio padrão da temperatura
@@ -21,6 +22,7 @@ def read_temperature_data():
     temp_value = round(np.random.normal(mean_temperature, std_deviation), 1)
     temp_message = f"{temp_value}ºC"
     return temp_message
+
 
 def sensor_thread():
     try:
@@ -32,7 +34,8 @@ def sensor_thread():
         while True:
             temp_level = read_temperature_data()
             print(f"Temperatura: {temp_level}")
-            channel.basic_publish(exchange='devices', routing_key='air_cond', body=temp_level)
+            channel.basic_publish(exchange='devices',
+                                  routing_key='air_cond', body=temp_level)
             time.sleep(5)
 
         connection.close()
@@ -42,6 +45,7 @@ def sensor_thread():
         print('Encerrando o dispositivo sensor de ar condicionado.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
+
 
 class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServiceServicer):
     def turnOnAirConditioner(self, request, context):
@@ -90,10 +94,13 @@ class AirConditionerService(air_conditioner_service_pb2_grpc.AirConditionerServi
         else:
             return air_conditioner_service_pb2.Status(message="O ar condicionado está desligado, não é possível diminuir a temperatura")
 
+
 def atuador_thread():
     try:
-        server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        air_conditioner_service_pb2_grpc.add_AirConditionerServiceServicer_to_server(AirConditionerService(), server)
+        server = grpc.server(
+            thread_pool=futures.ThreadPoolExecutor(max_workers=10))
+        air_conditioner_service_pb2_grpc.add_AirConditionerServiceServicer_to_server(
+            AirConditionerService(), server)
         server.add_insecure_port('[::]:50052')
         server.start()
         server.wait_for_termination()
@@ -103,6 +110,7 @@ def atuador_thread():
         print('Encerrando o dispositivo atuador de ar condicionado.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
+
 
 if __name__ == '__main__':
     sensor_thread = threading.Thread(target=sensor_thread)

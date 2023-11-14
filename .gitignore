@@ -1,2 +1,5 @@
 # Diretórios
 venv
+
+# Byte compiled
+__pycache__/

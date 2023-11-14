@@ -12,8 +12,8 @@ Trabalho 02 da disciplina de Sistemas Distribuídos do curso de Engenharia de Co
 
 ### Frameworks:
 
-- **RabbitMQ:**
-- **gRPC:**
+- **RabbitMQ**
+- **gRPC**
 
 ## Instalação
 

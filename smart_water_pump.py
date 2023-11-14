@@ -12,12 +12,14 @@ mean_humidity = 60
 global status
 status = False
 
+
 def read_humidity_data():
     global mean_humidity
     std_deviation = 1.0  # Desvio padrão da umidade
 
     humidity_value = round(np.random.normal(mean_humidity, std_deviation), 1)
     return f"{humidity_value}%"
+
 
 def sensor_thread():
     try:
@@ -28,7 +30,8 @@ def sensor_thread():
         while True:
             humidity = read_humidity_data()
             print(f"Umidade do solo: {humidity}")
-            channel.basic_publish(exchange='devices', routing_key='water_pump', body=humidity)
+            channel.basic_publish(exchange='devices',
+                                  routing_key='water_pump', body=humidity)
             time.sleep(5)
 
         connection.close()
@@ -39,8 +42,9 @@ def sensor_thread():
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
+
 class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
-    
+
     def turnOn(self, request, context):
         global mean_humidity
         global status
@@ -65,10 +69,13 @@ class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
         else:
             return actuators_service_pb2.Status(message="A bomba de água já está desligada")
 
+
 def atuador_thread():
     try:
-        server = grpc.server(thread_pool=futures.ThreadPoolExecutor(max_workers=10))
-        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(ActuatorsService(), server)
+        server = grpc.server(
+            thread_pool=futures.ThreadPoolExecutor(max_workers=10))
+        actuators_service_pb2_grpc.add_ActuatorsServiceServicer_to_server(
+            ActuatorsService(), server)
         server.add_insecure_port('[::]:50053')
         server.start()
         server.wait_for_termination()
@@ -78,6 +85,7 @@ def atuador_thread():
         print('Encerrando o dispositivo atuador.')
     except Exception as e:
         print(f"Erro inesperado: {e}")
+
 
 if __name__ == '__main__':
     sensor_thread = threading.Thread(target=sensor_thread)

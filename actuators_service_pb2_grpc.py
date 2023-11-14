@@ -15,15 +15,15 @@ class ActuatorsServiceStub(object):
             channel: A grpc.Channel.
         """
         self.turnOn = channel.unary_unary(
-                '/actuators_service.ActuatorsService/turnOn',
-                request_serializer=actuators__service__pb2.TurnOnRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
+            '/actuators_service.ActuatorsService/turnOn',
+            request_serializer=actuators__service__pb2.TurnOnRequest.SerializeToString,
+            response_deserializer=actuators__service__pb2.Status.FromString,
+        )
         self.turnOff = channel.unary_unary(
-                '/actuators_service.ActuatorsService/turnOff',
-                request_serializer=actuators__service__pb2.TurnOffRequest.SerializeToString,
-                response_deserializer=actuators__service__pb2.Status.FromString,
-                )
+            '/actuators_service.ActuatorsService/turnOff',
+            request_serializer=actuators__service__pb2.TurnOffRequest.SerializeToString,
+            response_deserializer=actuators__service__pb2.Status.FromString,
+        )
 
 
 class ActuatorsServiceServicer(object):
@@ -44,56 +44,57 @@ class ActuatorsServiceServicer(object):
 
 def add_ActuatorsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'turnOn': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOn,
-                    request_deserializer=actuators__service__pb2.TurnOnRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
-            'turnOff': grpc.unary_unary_rpc_method_handler(
-                    servicer.turnOff,
-                    request_deserializer=actuators__service__pb2.TurnOffRequest.FromString,
-                    response_serializer=actuators__service__pb2.Status.SerializeToString,
-            ),
+        'turnOn': grpc.unary_unary_rpc_method_handler(
+            servicer.turnOn,
+            request_deserializer=actuators__service__pb2.TurnOnRequest.FromString,
+            response_serializer=actuators__service__pb2.Status.SerializeToString,
+        ),
+        'turnOff': grpc.unary_unary_rpc_method_handler(
+            servicer.turnOff,
+            request_deserializer=actuators__service__pb2.TurnOffRequest.FromString,
+            response_serializer=actuators__service__pb2.Status.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'actuators_service.ActuatorsService', rpc_method_handlers)
+        'actuators_service.ActuatorsService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
-
  # This class is part of an EXPERIMENTAL API.
+
+
 class ActuatorsService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def turnOn(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+               target,
+               options=(),
+               channel_credentials=None,
+               call_credentials=None,
+               insecure=False,
+               compression=None,
+               wait_for_ready=None,
+               timeout=None,
+               metadata=None):
         return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/turnOn',
-            actuators__service__pb2.TurnOnRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             actuators__service__pb2.TurnOnRequest.SerializeToString,
+                                             actuators__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def turnOff(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                target,
+                options=(),
+                channel_credentials=None,
+                call_credentials=None,
+                insecure=False,
+                compression=None,
+                wait_for_ready=None,
+                timeout=None,
+                metadata=None):
         return grpc.experimental.unary_unary(request, target, '/actuators_service.ActuatorsService/turnOff',
-            actuators__service__pb2.TurnOffRequest.SerializeToString,
-            actuators__service__pb2.Status.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+                                             actuators__service__pb2.TurnOffRequest.SerializeToString,
+                                             actuators__service__pb2.Status.FromString,
+                                             options, channel_credentials,
+                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
