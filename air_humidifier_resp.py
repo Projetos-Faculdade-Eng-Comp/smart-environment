@@ -7,17 +7,16 @@ import board
 import adafruit_dht
 import actuators_service_pb2
 import actuators_service_pb2_grpc
-import digitalio
+import RPi.GPIO as GPIO 
 
 global status
 status = False
 
 global dhtDevice
 dhtDevice = adafruit_dht.DHT22(board.D4)
-global pinPump
-pinPump = board.D11
-pinPump.direction = digitalio.Direction.OUTPUT
-pinPump.value = False
+GPIO.setmode(GPIO.BCM)    # Numeração nomes GPIO 
+GPIO.setup(17, GPIO.OUT)
+GPIO.output(17, GPIO.LOW)
 
 
 def read_humidity_data():
@@ -56,23 +55,23 @@ class ActuatorsService(actuators_service_pb2_grpc.ActuatorsServiceServicer):
     def turnOn(self, request, context):
         global status
         if not status:
-            print("Ligando a Bomba de água")
-            pinPump.value = True
+            print("Ligando o umidificador")
+            GPIO.output(17, GPIO.HIGH)
             status = True
 
-            return actuators_service_pb2.Status(message="U com sucesso")
+            return actuators_service_pb2.Status(message="Umidificador ligado com sucesso")
         else:
-            return actuators_service_pb2.Status(message="A Bomba de água já está ligada")
+            return actuators_service_pb2.Status(message="O umificador já está ligado")
 
     def turnOff(self, request, context):
         global status
         if status:
-            print("Desligando a Bomba de água")
-            pinPump.value = False
+            print("Desligando o umidificador")
+            GPIO.output(17, GPIO.LOW)
             status = False
-            return actuators_service_pb2.Status(message="bomba de água desligada com sucesso")
+            return actuators_service_pb2.Status(message="Umidificador desligado com sucesso")
         else:
-            return actuators_service_pb2.Status(message="A bomba de água já está desligada")
+            return actuators_service_pb2.Status(message="O umidificador já está desligado")
 
 
 def atuador_thread():
