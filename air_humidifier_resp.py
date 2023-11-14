@@ -7,7 +7,7 @@ import board
 import adafruit_dht
 import actuators_service_pb2
 import actuators_service_pb2_grpc
-import digitalio
+import RPi.GPIO as GPIO 
 
 global status
 status = False
